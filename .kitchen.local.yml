@@ -1,0 +1,31 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: eu_west_1
+  region: eu-west-1
+  availability_zone: a
+  require_chef_omnibus: true
+  instance_type: t3.medium
+  associate_public_ip: true
+  shared_credentials_profile: success-engineering
+
+provisioner:
+  name: chef_zero
+  chef_license: accept-no-persist
+
+transport:
+  ssh_key: /home/steveb/.ssh/eu_west_1
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: centos-7
+  - name: ubuntu-18.04
+
+suites:
+  - name: default
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
