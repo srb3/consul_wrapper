@@ -2,15 +2,17 @@
 
 # The InSpec reference, with examples and extensive documentation, can be
 # found at https://www.inspec.io/docs/reference/resources/
+if os.windows?
+  script = <<-SCRIPT
+  echo (Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8500/v1/kv/test-details?raw).content
+  SCRIPT
 
-unless os.windows?
-  # This is an example test, replace with your own test.
-  describe user('root'), :skip do
-    it { should exist }
+  describe powershell(script) do
+    its('strip') { should eq '{"test":"data"}' }
   end
-end
 
-# This is an example test, replace it with your own test.
-describe port(80), :skip do
-  it { should_not be_listening }
+else
+  describe http('http://localhost:8500/v1/kv/test-details?raw') do
+    its('body') { should cmp '{"test":"data"}' }
+  end
 end

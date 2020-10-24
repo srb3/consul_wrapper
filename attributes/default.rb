@@ -5,7 +5,7 @@ default['consul_wrapper']['linux_bin_path'] = '/opt/consul/bin'
 default['consul_wrapper']['windows_bin_path'] = 'C:\consul\bin'
 
 default['consul_wrapper']['linux_data_path'] = '/opt/consul/data'
-default['consul_wrapper']['windows_data_path'] = 'C:\consul\data'
+default['consul_wrapper']['windows_data_path'] = 'C:/consul/data'
 
 default['consul_wrapper']['linux_var_path'] = '/opt/consul/var'
 default['consul_wrapper']['windows_var_path'] = 'C:\consul\var'
@@ -62,3 +62,6 @@ default['consul_wrapper']['bind'] = '0.0.0.0'
 default['consul_wrapper']['server'] = true
 default['consul_wrapper']['bootstrap_expect'] = 1
 default['consul_wrapper']['datacenter'] = 'dc1'
+
+default['consul_wrapper']['script'] = ''
+default['consul_wrapper']['scritp_lock_file'] = ''

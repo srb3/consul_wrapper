@@ -15,29 +15,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-user 'consul'
+
+user 'consul' unless platform?('windows')
+
 directory node['consul_wrapper']['bin_path'] do
   recursive true
-  owner 'consul'
-  group 'consul'
+  owner 'consul' unless platform?('windows')
+  group 'consul' unless platform?('windows')
 end
 
 directory node['consul_wrapper']['data_path'] do
   recursive true
-  owner 'consul'
-  group 'consul'
+  owner 'consul' unless platform?('windows')
+  group 'consul' unless platform?('windows')
 end
 
 directory node['consul_wrapper']['var_path'] do
   recursive true
-  owner 'consul'
-  group 'consul'
+  owner 'consul' unless platform?('windows')
+  group 'consul' unless platform?('windows')
 end
 
 directory node['consul_wrapper']['config_path'] do
   recursive true
-  owner 'consul'
-  group 'consul'
+  owner 'consul' unless platform?('windows')
+  group 'consul' unless platform?('windows')
 end
 
 remote_file node['consul_wrapper']['download_path'] do
@@ -47,22 +49,21 @@ end
 archive_file node['consul_wrapper']['download_path'] do
   destination "#{node['consul_wrapper']['tmp_bin_path']}/consul"
   mode '755'
-  owner 'consul'
-  group 'consul'
+  owner 'consul' unless platform?('windows')
+  group 'consul' unless platform?('windows')
 end
 
 if platform?('windows')
   powershell_script 'mv_consul_bin' do
-    guard_interpreter :powershell_script
-    code "cp #{node['consul_wrapper']['tmp_bin_path']}/consul/consul #{node['consul_wrapper']['bin_path']}/consul"
-    not_if { ::File.exist?("#{node['consul_wrapper']['bin_path']}/consul/consul") }
+    code "cp #{node['consul_wrapper']['tmp_bin_path']}\\consul\\consul.exe #{node['consul_wrapper']['bin_path']}\\consul.exe"
+    not_if { ::File.exist?("#{node['consul_wrapper']['bin_path']}\\consul.exe") }
   end
 else
   bash 'mv_consul_bin' do
     code <<-CODE
       cp #{node['consul_wrapper']['tmp_bin_path']}/consul/consul #{node['consul_wrapper']['bin_path']}/consul
     CODE
-    not_if { ::File.exist?("#{node['consul_wrapper']['bin_path']}/consul/consul") }
+    not_if { ::File.exist?("#{node['consul_wrapper']['bin_path']}/consul") }
   end
 end
 
@@ -81,4 +82,18 @@ if platform?('windows')
   include_recipe 'consul_wrapper::service'
 else
   include_recipe 'consul_wrapper::systemd'
+end
+
+if node['consul_wrapper']['script'] != ''
+  if platform?('windows')
+    powershell_script 'consul_populate_script' do
+      code node['consul_wrapper']['script']
+      not_if { ::File.exist?(node['consul_wrapper']['script_lock_file']) }
+    end
+  else
+    bash 'consul_populate_script' do
+      code node['consul_wrapper']['script']
+      not_if { ::File.exist?(node['consul_wrapper']['script_lock_file']) }
+    end
+  end
 end
