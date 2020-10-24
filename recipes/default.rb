@@ -84,15 +84,22 @@ else
   include_recipe 'consul_wrapper::systemd'
 end
 
+template node['consul_wrapper']['populate_script_path'] do
+  source 'populate.erb'
+  variables(
+    script: node['consul_wrapper']['script']
+  )
+end
+
 if node['consul_wrapper']['script'] != ''
   if platform?('windows')
     powershell_script 'consul_populate_script' do
-      code node['consul_wrapper']['script']
+      code "& #{node['consul_wrapper']['populate_script_path']}"
       not_if { ::File.exist?(node['consul_wrapper']['script_lock_file']) }
     end
   else
     bash 'consul_populate_script' do
-      code node['consul_wrapper']['script']
+      code "bash #{node['consul_wrapper']['populate_script_path']}"
       not_if { ::File.exist?(node['consul_wrapper']['script_lock_file']) }
     end
   end

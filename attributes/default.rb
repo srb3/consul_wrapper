@@ -65,3 +65,8 @@ default['consul_wrapper']['datacenter'] = 'dc1'
 
 default['consul_wrapper']['script'] = ''
 default['consul_wrapper']['scritp_lock_file'] = ''
+default['consul_wrapper']['populate_script_path'] = if platform?('windows')
+                                                      "#{node['consul_wrapper']['var_path']}/populate.ps1"
+                                                    else
+                                                      "#{node['consul_wrapper']['var_path']}/populate.sh"
+                                                    end
