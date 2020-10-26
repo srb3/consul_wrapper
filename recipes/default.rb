@@ -74,7 +74,8 @@ template node['consul_wrapper']['config_file_path'] do
     server: node['consul_wrapper']['server'],
     bootstrap_expect: node['consul_wrapper']['bootstrap_expect'],
     data_dir: node['consul_wrapper']['data_path'],
-    datacenter: node['consul_wrapper']['datacenter']
+    datacenter: node['consul_wrapper']['datacenter'],
+    port: node['consul_wrapper']['port']
   )
 end
 

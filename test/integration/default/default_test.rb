@@ -2,9 +2,12 @@
 
 # The InSpec reference, with examples and extensive documentation, can be
 # found at https://www.inspec.io/docs/reference/resources/
+port = 8501
+url = "http://localhost:#{port}/v1/kv/test-details?raw"
+
 if os.windows?
   script = <<-SCRIPT
-  echo (Invoke-WebRequest -UseBasicParsing -Uri http://localhost:8500/v1/kv/test-details?raw).content
+  echo (Invoke-WebRequest -UseBasicParsing -Uri #{url}).content
   SCRIPT
 
   describe powershell(script) do
@@ -12,7 +15,7 @@ if os.windows?
   end
 
 else
-  describe http('http://localhost:8500/v1/kv/test-details?raw') do
+  describe http(url) do
     its('body') { should cmp '{"test":"data"}' }
   end
 end
