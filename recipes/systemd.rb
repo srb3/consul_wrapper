@@ -13,8 +13,8 @@ systemd_unit 'consul.service' do
             User: 'consul',
             Group: 'consul',
             ExecStart: cmd,
-            ExecReload: "#{node['consul_wrapper']['bin_file_path']} reload",
-            ExecStop: "#{node['consul_wrapper']['bin_file_path']} leave",
+            ExecReload: "#{node['consul_wrapper']['bin_file_path']}/consul reload",
+            ExecStop: "#{node['consul_wrapper']['bin_file_path']}/consul leave",
             KillMode: 'process',
             LimitNOFILE: '65536',
             Restart: 'on-failure'
@@ -26,7 +26,7 @@ systemd_unit 'consul.service' do
 end
 
 service 'consul' do
-  subscribes :restart, 'systemd_unit[consul.service]'
-  subscribes :restart, "template[#{node['consul_wrapper']['config_file_path']}]"
+  subscribes :restart, 'systemd_unit[consul.service]', :immediately
+  subscribes :reload, "template[#{node['consul_wrapper']['config_file_path']}]", :immediately
   action %i[enable start]
 end

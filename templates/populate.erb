@@ -22,7 +22,7 @@ Stop-Transcript
 <% else %>
 #!/bin/bash
 
-exec > <%= @log_path %>wait.log 2>&1
+exec > <%= @log_path %>/wait.log 2>&1
 
 systemctl restart consul
 max_retry=50
