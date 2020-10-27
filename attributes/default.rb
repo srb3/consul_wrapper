@@ -71,3 +71,4 @@ default['consul_wrapper']['populate_script_path'] = if platform?('windows')
                                                       "#{node['consul_wrapper']['var_path']}/populate.sh"
                                                     end
 default['consul_wrapper']['port'] = '8500'
+default['consul_wrapper']['log_level'] = 'info'

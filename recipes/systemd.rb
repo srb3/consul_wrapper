@@ -1,4 +1,5 @@
-e = "#{node['consul_wrapper']['bin_path']}/consul agent -config-dir=#{node['consul_wrapper']['config_path']}"
+cmd = "#{node['consul_wrapper']['bin_path']}/consul agent \
+-config-dir=#{node['consul_wrapper']['config_path']} -log-level #{node['consul_wrapper']['log_level']}"
 
 systemd_unit 'consul.service' do
   content(Unit: {
@@ -11,7 +12,7 @@ systemd_unit 'consul.service' do
           Service: {
             User: 'consul',
             Group: 'consul',
-            ExecStart: e,
+            ExecStart: cmd,
             ExecReload: "#{node['consul_wrapper']['bin_file_path']} reload",
             ExecStop: "#{node['consul_wrapper']['bin_file_path']} leave",
             KillMode: 'process',
