@@ -88,7 +88,10 @@ end
 template node['consul_wrapper']['populate_script_path'] do
   source 'populate.erb'
   variables(
-    script: node['consul_wrapper']['script']
+    script: node['consul_wrapper']['script'],
+    bin_path: node['consul_wrapper']['bin_path'],
+    log_path: node['consul_wrapper']['var_path'],
+    windows: node['consul_wrapper']['windows']
   )
 end
 

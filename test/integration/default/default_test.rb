@@ -2,7 +2,7 @@
 
 # The InSpec reference, with examples and extensive documentation, can be
 # found at https://www.inspec.io/docs/reference/resources/
-port = 8501
+port = 8500
 url = "http://localhost:#{port}/v1/kv/test-details?raw"
 
 if os.windows?

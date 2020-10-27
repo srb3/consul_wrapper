@@ -1,1 +1,40 @@
+<% if @windows %>
+Start-Transcript -Path <%= @log_path %>/wait.log
+$ErrorActionPreferenceBak = $ErrorActionPreference
+$ErrorActionPreference    = 'Stop'
+$counter = 0
+While(($True) -or ($counter -ne 50)){
+    try{
+        <%= @bin_path %>/consul kv put up 1
+        $counter++
+        break
+    }
+    catch{
+        Write-Output "Trying again. Try $conter"
+        Start-Sleep -Seconds 1
+    }
+    finally{
+        #Reset the erroracton preference
+        $ErrorActionPreference = $ErrorActionPreferenceBak
+    }
+}
+Stop-Transcript
+<% else %>
+#!/bin/bash
+
+exec > <%= @log_path %>wait.log 2>&1
+
+systemctl restart consul
+max_retry=50
+counter=0
+
+until <%= @bin_path %>/consul kv put up 1
+do
+   sleep 1
+   [[ counter -eq $max_retry ]] && echo "Failed!" && exit 1
+   echo "Trying again. Try #$counter at $(date)"
+   ((counter++))
+done
+<% end %>
+
 <%= @script %>
