@@ -16,7 +16,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-user 'consul' unless platform?('windows')
+group 'consul' unless platform?('windows')
+
+user 'consul' do
+  gid 'consul'
+  not_if { platform?('windows') }
+end
 
 directory node['consul_wrapper']['bin_path'] do
   recursive true

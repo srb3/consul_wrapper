@@ -4,7 +4,7 @@ maintainer_email 'sbrown@chef.io'
 license 'Apache-2.0'
 description 'Installs/Configures consul_wrapper'
 long_description 'Installs/Configures consul_wrapper'
-version '0.1.0'
+version '0.1.8'
 chef_version '>= 14.0'
 
 
